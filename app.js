@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
 const routes = require('./routes');
+const { dbUri } = require('./utils/constants');
 const { requestError } = require('./utils/errorConstant');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -21,7 +22,7 @@ const {
   PORT = 3000,
 } = process.env;
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(process.env.NODE_ENV === 'production' ? MONGODB_URI : dbUri);
 app.use(requestLogger);
 
 app.use(routes);
