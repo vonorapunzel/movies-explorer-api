@@ -1,3 +1,3 @@
 # movies-explorer-api
 
-сервер https://api.freemovies.nomoredomains.work/
+сервер https://api.freemovies.nomoredomains.rocks/
