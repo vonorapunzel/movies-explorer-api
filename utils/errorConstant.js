@@ -1,7 +1,7 @@
 exports.requestError = {
   notFoundError: {
     USER_MESSAGE: 'Пользователь не найден',
-    MOVIE_MESSAGE: 'Фильм не найден.',
+    MOVIE_MESSAGE: 'Фильмы не найден.',
     PAGE_MESSAGE: 'Такой страницы нет.',
   },
   badRequestError: {
@@ -13,11 +13,15 @@ exports.requestError = {
   forbiddenError: {
     MOVIE_MESSAGE: 'Действие запрещено.',
   },
+  serverError: {
+    ERROR: 'На сервере произошла ошибка.',
+  }
 };
 
-exports.validationERROR = {
+exports.validationError = {
   validation: {
     URL_MESSAGE: 'Ошибка валидации URL.',
+    EMAIL_MESSAGE: 'Указана неверный email.',
   },
 };
 

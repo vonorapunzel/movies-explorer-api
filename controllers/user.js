@@ -4,18 +4,12 @@ const User = require('../models/users');
 const { jwtDevSecret } = require('../utils/constants');
 const { requestError } = require('../utils/errorConstant');
 const ConflictError = require('../errors/ConflictError');
-const NotFoundError = require('../errors/NotFoundError');
-const BadRequestError = require('../errors/BadRequestError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // возвращает информацию о пользователе
 const getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail()
-    .catch(() => {
-      throw new NotFoundError({ message: requestError.notFoundError.USER_MESSAGE });
-    })
     .then((user) => res.send({ email: user.email, name: user.name }))
     .catch(next);
 };
@@ -32,10 +26,10 @@ const createUser = (req, res, next) => {
     .then(() => res.send({ email, name }))
     .catch((err) => {
       if (err.name === 'MongoServerError' || err.code === 11000) {
-        throw new ConflictError({ message: requestError.conflictError.EMAIL_MESSAGE });
+        next(new ConflictError({ message: requestError.conflictError.EMAIL_MESSAGE }));
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 // обновление информации о пользователе
@@ -50,15 +44,13 @@ const updateUser = (req, res, next) => {
       runValidators: true,
     },
   )
-    .orFail(() => new NotFoundError({ message: requestError.notFoundError.USER_MESSAGE }))
-    .catch((err) => {
-      if (err instanceof NotFoundError) {
-        throw err;
-      }
-      throw new BadRequestError({ message: requestError.BadRequestError.DATA_MESSAGE });
-    })
     .then((user) => res.send({ email: user.email, name: user.name }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'MongoServerError' || err.code === 11000) {
+        next(new ConflictError({ message: requestError.conflictError.EMAIL_MESSAGE }));
+      }
+      next(err);
+    });
 };
 
 // авторизация пользователя

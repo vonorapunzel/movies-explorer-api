@@ -50,21 +50,14 @@ const createMovie = (req, res, next) => {
       thumbnail,
       movieId,
     }))
-    .catch(() => {
-      throw new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE });
-    })
     .catch(next);
 };
 
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
-    .orFail()
-    .catch(() => {
-      throw new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE });
-    })
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        throw new ForbiddenError({ message: requestError.forbiddenError.MOVIE_MESSAGE });
+        next(new ForbiddenError({ message: requestError.forbiddenError.MOVIE_MESSAGE }));
       }
       Movie.findByIdAndRemove(req.params.movieId)
         .then((data) => {
@@ -72,7 +65,9 @@ const deleteMovie = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(next);
+    .catch(() => {
+      next(new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE }));
+    });
 };
 
 module.exports = {
