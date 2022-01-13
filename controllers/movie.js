@@ -65,8 +65,12 @@ const deleteMovie = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => {
-      next(new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE }));
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        next(new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE }));
+      } else {
+        next(err);
+      }
     });
 };
 

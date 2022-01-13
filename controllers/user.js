@@ -27,8 +27,9 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'MongoServerError' || err.code === 11000) {
         next(new ConflictError({ message: requestError.conflictError.EMAIL_MESSAGE }));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -48,8 +49,9 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'MongoServerError' || err.code === 11000) {
         next(new ConflictError({ message: requestError.conflictError.EMAIL_MESSAGE }));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
