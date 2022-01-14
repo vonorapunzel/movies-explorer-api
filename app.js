@@ -9,7 +9,12 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
 const routes = require('./routes/index');
 
-const { MONGODB_URI, PORT = 3000 } = process.env;
+const {
+  MONGODB_URI,
+  DEV_URI = 'mongodb://localhost:27017/moviesdb',
+  NODE_ENV,
+  PORT = 3000,
+} = process.env;
 
 const app = express();
 
@@ -18,7 +23,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
 app.use(limiter);
 app.use(routes);
