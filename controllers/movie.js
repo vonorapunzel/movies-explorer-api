@@ -62,16 +62,9 @@ const deleteMovie = (req, res, next) => {
       Movie.findByIdAndRemove(req.params.movieId)
         .then((data) => {
           res.send(data);
-        })
-        .catch(next);
+        });
     })
-    .catch((err) => {
-      if (err instanceof NotFoundError) {
-        next(new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE }));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {
