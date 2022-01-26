@@ -1,0 +1,1 @@
+exports.jwtDevSecret = 'dev-secret';
