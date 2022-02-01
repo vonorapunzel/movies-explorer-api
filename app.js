@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
@@ -22,7 +23,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
 app.use(limiter);
