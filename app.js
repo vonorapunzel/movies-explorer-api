@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
@@ -8,6 +7,7 @@ const helmet = require('helmet');
 const errorHandler = require('./middlewares/globalErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
+const cors = require('./middlewares/cors');
 const routes = require('./routes/index');
 
 const {
@@ -23,7 +23,8 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.options('*', cors);
+app.use(cors);
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
 app.use(limiter);
