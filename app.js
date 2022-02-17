@@ -23,7 +23,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.options('*', cors);
 app.use(cors);
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
