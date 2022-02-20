@@ -54,12 +54,13 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+   const { movieId } = req.params
+   Movie.findById(movieId)
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
         next(new ForbiddenError({ message: requestError.forbiddenError.MOVIE_MESSAGE }));
       }
-      Movie.findByIdAndRemove(req.params.movieId)
+      Movie.findByIdAndRemove(movieId)
         .then((data) => {
           res.send(data);
         });

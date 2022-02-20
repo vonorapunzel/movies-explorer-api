@@ -14,7 +14,7 @@ router.use('/', auth, users);
 router.use('/', auth, movies);
 
 // ресурс не найден
-router.use('*', () => {
+router.all('*', () => {
   throw new NotFoundError({ message: requestError.notFoundError.PAGE_MESSAGE });
 });
 module.exports = router;

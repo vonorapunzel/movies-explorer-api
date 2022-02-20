@@ -9,6 +9,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 // возвращает информацию о пользователе
 const getUser = (req, res, next) => {
+  console.log(req, res);
   User.findById(req.user._id)
     .then((user) => res.send({ email: user.email, name: user.name }))
     .catch(next);
@@ -69,15 +70,16 @@ const loginUser = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          sameSite: true,
+	  secure: true,
+	  sameSite: 'None',
         })
-        .send({ token });
+        .send({ message: 'Успех!' });
     })
     .catch(next);
 };
 
 const logoutUser = (req, res) => {
-  res.status(202).clearCookie('jwt').send('куки удален.');
+  res.status(202).clearCookie('jwt', {httpOnly: true, secure: true, sameSite: 'None',}).send({ message: 'куки удален.'});
 };
 
 module.exports = {
