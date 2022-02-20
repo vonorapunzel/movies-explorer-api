@@ -9,6 +9,8 @@ const { requestError } = require('../utils/errorConstant');
 
 router.all('/', auth);
 
+router.all('/', auth);
+
 router.post('/signup', validateUser, createUser);
 router.post('/signin', validateLogin, loginUser);
 router.post('/signout', auth, logoutUser);
