@@ -27,28 +27,16 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-<<<<<<< HEAD
-   const { movieId } = req.params
-   Movie.findById(movieId)
-=======
   const { movieId } = req.params;
 
   Movie.findById(movieId)
     .orFail(() => new NotFoundError('Фильма с таким id нет.'))
->>>>>>> 44bf3ace59914f8ba838b47d91d71bc243ad9d0d
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалять фильмы других пользователей.');
       }
-<<<<<<< HEAD
-      Movie.findByIdAndRemove(movieId)
-        .then((data) => {
-          res.send(data);
-        });
-=======
       return Movie.findByIdAndRemove(movieId)
         .then((m) => res.send(m));
->>>>>>> 44bf3ace59914f8ba838b47d91d71bc243ad9d0d
     })
     .catch(next);
 };
