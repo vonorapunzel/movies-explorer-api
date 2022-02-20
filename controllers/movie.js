@@ -2,6 +2,7 @@ const Movie = require('../models/movies');
 const { requestError } = require('../utils/errorConstant');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
+cons
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -10,18 +11,48 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  Movie.findOne({ movieId: req.body.movieId })
-    .then((movie) => {
-      if (movie) {
-        throw new ForbiddenError('Такой фильм уже добавлен в избранное');
-      }
-      return Movie.create({
-        ...req.body,
-        owner: req.user._id,
-      });
-    })
-    .then((movie) => {
-      res.send(movie);
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+  } = req.body;
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: req.user._id,
+  })
+    .then(() => res.send({
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailer,
+      nameRU,
+      nameEN,
+      thumbnail,
+      movieId,
+    }))
+    .catch(() => {
+      throw new NotFoundError({ message: requestError.notFoundError.MOVIE_MESSAGE });
     })
     .catch(next);
 };
