@@ -10,59 +10,33 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    nameRU,
-    nameEN,
-    thumbnail,
-    movieId,
-  } = req.body;
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    nameRU,
-    nameEN,
-    thumbnail,
-    movieId,
-    owner: req.user._id,
-  })
-    .then(() => res.send({
-      country,
-      director,
-      duration,
-      year,
-      description,
-      image,
-      trailer,
-      nameRU,
-      nameEN,
-      thumbnail,
-      movieId,
-    }))
+  Movie.findOne({ movieId: req.body.movieId })
+    .then((movie) => {
+      if (movie) {
+        throw new ForbiddenError('Такой фильм уже добавлен в избранное');
+      }
+      return Movie.create({
+        ...req.body,
+        owner: req.user._id,
+      });
+    })
+    .then((movie) => {
+      res.send(movie);
+    })
     .catch(next);
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  const { movieId } = req.params;
+
+  Movie.findById(movieId)
+    .orFail(() => new NotFoundError('Фильма с таким id нет.'))
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        next(new ForbiddenError({ message: requestError.forbiddenError.MOVIE_MESSAGE }));
+        throw new ForbiddenError('Вы не можете удалять фильмы других пользователей.');
       }
-      Movie.findByIdAndRemove(req.params.movieId)
-        .then((data) => {
-          res.send(data);
-        });
+      return Movie.findByIdAndRemove(movieId)
+        .then((m) => res.send(m));
     })
     .catch(next);
 };

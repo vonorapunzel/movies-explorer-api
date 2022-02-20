@@ -3,6 +3,11 @@ const validatior = require('validator');
 const { validationError } = require('../utils/errorConstant');
 const ConflictError = require('../errors/ConflictError');
 
+const validationURL = (value) => {
+  const result = isURL(value);
+  if (!result) throw new ConflictError({ message: validationError.validation.URL_MESSAGE });
+  return value;
+};
 const validateUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -43,8 +48,9 @@ const validateMovie = celebrate({
 
 const validateDeleteMovie = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().alphanum().length(24).hex().required(),
-  }),
+    movieId: Joi.string().alphanum().length(24).hex()
+      .message('Передан не валидный id.'),
+  }).unknown(true),
 });
 
 module.exports = {

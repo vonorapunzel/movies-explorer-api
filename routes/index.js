@@ -7,8 +7,10 @@ const { validateUser, validateLogin } = require('../middlewares/validation');
 const NotFoundError = require('../errors/NotFoundError');
 const { requestError } = require('../utils/errorConstant');
 
+router.all('/', auth);
 
 router.all('/', auth);
+
 router.post('/signup', validateUser, createUser);
 router.post('/signin', validateLogin, loginUser);
 router.post('/signout', auth, logoutUser);
@@ -16,7 +18,7 @@ router.use('/users', auth, users);
 router.use('/movies', auth, movies);
 
 // ресурс не найден
-router.use('*', () => {
+router.all('*', () => {
   throw new NotFoundError({ message: requestError.notFoundError.PAGE_MESSAGE });
 });
 module.exports = router;

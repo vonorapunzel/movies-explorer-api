@@ -30,10 +30,9 @@ app.use(cors);
 >>>>>>> 05eb9bca27049ddfb869eeb836f308542af0afce
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
+app.use(errorLogger);
 app.use(limiter);
 app.use(routes);
-
-app.use(errorLogger);
 
 // обработчик ошибок валидации
 app.use(errors());
