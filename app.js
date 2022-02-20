@@ -26,10 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors);
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_URI : DEV_URI);
 app.use(requestLogger);
+app.use(errorLogger);
 app.use(limiter);
 app.use(routes);
-
-app.use(errorLogger);
 
 // обработчик ошибок валидации
 app.use(errors());

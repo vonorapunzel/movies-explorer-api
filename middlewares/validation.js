@@ -5,7 +5,7 @@ const ConflictError = require('../errors/ConflictError');
 
 const validationURL = (value) => {
   const result = isURL(value);
-  if (!result) throw new ConflictError({ message: validationError.invalid.URL_MESSAGE });
+  if (!result) throw new ConflictError({ message: validationError.validation.URL_MESSAGE });
   return value;
 };
 
@@ -49,8 +49,9 @@ const validateMovie = celebrate({
 
 const validateDeleteMovie = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.number().required(),
-  }),
+    movieId: Joi.string().alphanum().length(24).hex()
+      .message('Передан не валидный id.'),
+  }).unknown(true),
 });
 
 module.exports = {
