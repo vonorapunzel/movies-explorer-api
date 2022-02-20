@@ -15,7 +15,7 @@ exports.requestError = {
   },
   serverError: {
     ERROR: 'На сервере произошла ошибка.',
-  }
+  },
 };
 
 exports.validationError = {

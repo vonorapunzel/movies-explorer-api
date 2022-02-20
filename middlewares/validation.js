@@ -1,14 +1,13 @@
 const { celebrate, Joi } = require('celebrate');
-const { isURL } = require('validator');
+const validatior = require('validator');
 const { validationError } = require('../utils/errorConstant');
 const ConflictError = require('../errors/ConflictError');
 
 const validationURL = (value) => {
   const result = isURL(value);
-  if (!result) throw new ConflictError({ message: validationError.invalid.URL_MESSAGE });
+  if (!result) throw new ConflictError({ message: validationError.validation.URL_MESSAGE });
   return value;
 };
-
 const validateUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -38,9 +37,9 @@ const validateMovie = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().custom(validationURL),
-    trailer: Joi.string().required().custom(validationURL),
-    thumbnail: Joi.string().required().custom(validationURL),
+    image: Joi.string().required(),
+    trailer: Joi.string().required(),
+    thumbnail: Joi.string().required(),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -49,8 +48,9 @@ const validateMovie = celebrate({
 
 const validateDeleteMovie = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.number().required(),
-  }),
+    movieId: Joi.string().alphanum().length(24).hex()
+      .message('Передан не валидный id.'),
+  }).unknown(true),
 });
 
 module.exports = {
